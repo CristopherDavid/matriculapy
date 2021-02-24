@@ -1,33 +1,43 @@
-from matricula import Matricula
-from fecha import Fecha
+from matricula import Plate
+from fecha import DateObject
 import re
+
+DATE_DICTIONARY = {
+    '1':[1,2],
+    '2':[3,4],
+    '3':[5,6],
+    '4':[7,8],
+    '5':[9,0],
+}
 class PicoPlaca:
+    
+    def __init__(self,plate_number,date,hour):
+        self.plate = Plate(plate_number)
+        self.date = DateObject(date)
+        self.hour = hour.strip()
+        self.hour_verification()
 
-    def __init__(self,placa,fecha,hora):
-        self.matricula = Matricula(placa)
-        self.fecha = Fecha(fecha)
-        self.hora = hora.strip()
-        self.verificar_hora()
-
-    def verificar_hora(self):
-        self.on_time = False
-        exp_comprobar = '^([01]?[0-9]|2[0-3]):[0-5][0-9]$'
-        comprobar = re.search(exp_comprobar,self.hora)
-        if comprobar:
-            exp_validar = '^(([0]?[78]:[0-5][0-9])|([0]?[9]:([0-2][0-9]|[3][0])))|(([1][678]:[0-5][0-9])|([1][9]:([0-2][0-9]|[3][0])))$'
-            valid = re.search(exp_validar,self.hora)
-            if valid:
-                self.on_time = True
-        else:
-            raise ValueError("La hora ingresada no es una hora valida")
+    def hour_verification(self):
         
-    def verificar_pico(self):
-        respuesta = "CIRCULA"
-        if self.on_time:
-            digito = self.matricula.digito
-            dia = self.fecha.dia
-            if(((digito == 1 or digito == 2) and dia == 1) or ((digito == 3 or digito == 4) and dia == 2) 
-                or ((digito == 5 or digito == 6) and dia == 3) or ((digito == 7 or digito == 8) and dia == 4)
-                or ((digito == 9 or digito == 0) and dia == 5)):
-                respuesta = "NO CIRCULA" 
-        return respuesta
+        self.is_range = False
+        #Verification by regex if the string we get is a valid 24h hour
+        hour_validation_regex = '^([01]?[0-9]|2[0-3]):[0-5][0-9]$'
+        is_valid = re.search(hour_validation_regex,self.hour)
+        if is_valid:
+            #Verification by regex if the hour we get is in the range of no circulation 7:00 - 9:30 and 16:00 - 19:00
+            hour_range_regex = '^(([0]?[78]:[0-5][0-9])|([0]?[9]:([0-2][0-9]|[3][0])))|(([1][678]:[0-5][0-9])|([1][9]:([0-2][0-9]|[3][0])))$'
+            is_in_range = re.search(hour_range_regex,self.hour)
+            if is_in_range:
+                self.is_range = True
+        else:
+            raise ValueError("The hour entered it's not a valid hour")
+        
+    def verify_limitation(self):
+        response = "CIRCULA"
+        if self.is_range:
+            digit = self.plate.last_digit
+            day = self.date.day
+            #Verification if the list of the index under the day key has one of the digit restricted that day
+            if digit in DATE_DICTIONARY[day]:
+                response = "NO CIRCULA"
+        return response

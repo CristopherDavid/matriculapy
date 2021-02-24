@@ -1,7 +1,10 @@
 from pico_placa import PicoPlaca
 
-fecha = "   26/02/2021   "
-placa = " PCM-1990     "
-hora = "16:42    "
-nueva_comprobacion = PicoPlaca(placa=placa,fecha=fecha,hora=hora)
-verificacion = nueva_comprobacion.verificar_pico()
+
+#First declaration of PicoPlaca object, just to show the way it works
+#Strongly recommended to check the test_picoplaca module
+date = "25/02/2021"
+plate_number = "PCM-1990"
+hour = "19:00"
+new_test = PicoPlaca(plate_number,date,hour)
+verification = new_test.verify_limitation()

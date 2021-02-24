@@ -1,27 +1,28 @@
 from datetime import datetime
 
-class Fecha():
+class DateObject():
 
-    def __init__(self,cadena):
-        self.cadena = cadena.strip()
-        self.validar_fecha()
-        self.obtener_dia()
+    def __init__(self,string_date):
+        self.string_date =string_date.strip()
+        self.date_validation()
+        self.get_day_number()
 
-    def validar_fecha(self):
-        if(self.cadena.find('/') != -1):
+    def date_validation(self):
+        #Date format validation we can have '-' or '/' as our date separator
+        if(self.string_date.find('/') != -1):
             template = '%d/%m/%Y'
-        elif(self.cadena.find('-') != -1):
+        elif(self.string_date.find('-') != -1):
             template = '%d-%m-%Y'
         else:
             template = None
         try:
-            self.date = datetime.strptime(self.cadena,template)
+            self.date = datetime.strptime(self.string_date,template)
         except ValueError:
-            raise ValueError("La fecha ingresada no es adecuada")
+            raise ValueError("The date you entered is incorrect")
         except TypeError:
-            raise TypeError("El formato de fecha es incorrecto")
+            raise TypeError("El date format is incorrect")
         
 
-    def obtener_dia(self):
-        self.dia = int(self.date.strftime('%w'))
+    def get_day_number(self):
+        self.day = self.date.strftime('%w')
               

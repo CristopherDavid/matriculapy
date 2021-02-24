@@ -1,13 +1,13 @@
-class Matricula:
+class Plate():
 
-    def __init__(self, placa):
-        self.placa = placa.strip()
-        self.obtener_digito()
+    def __init__(self, plate_number):
+        self.plate_number = plate_number.strip()
+        self.get_last_digit()
     
-    def obtener_digito(self):
+    def get_last_digit(self):
         try:
-            self.digito = int(self.placa[-1])
+            self.last_digit = int(self.plate_number[-1])
         except TypeError:
-            raise TypeError("La placa no tiene un formato adecuado")
+            raise TypeError("The plate number format is incorrect")
 
         
